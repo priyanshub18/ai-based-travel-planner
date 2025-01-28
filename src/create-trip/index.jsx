@@ -2,7 +2,7 @@ import { AI_PROMPTS, SelectBudgetOptions, SelectTravelsList } from "../constants
 import { Input } from "../components/ui/input";
 import React, { useDebugValue, useEffect } from "react";
 import { useState } from "react";
-
+import axios from "axios";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { toast } from "sonner";
 import { chatSession } from "../service/AIModel";
@@ -21,7 +21,11 @@ function CreateTrip() {
     });
   };
   const login = useGoogleLogin({
-    onSuccess: (response) => console.log(response),
+    onSuccess: (response) => {
+      console.log(response);
+      getUserProfile(response);
+      // console.log("hi after some call");
+    },
     onError: (error) => console.log(error),
   });
   const onGenerateTrip = async () => {
@@ -51,6 +55,19 @@ function CreateTrip() {
   useEffect(() => {
     console.log(formData);
   }, [formData]);
+
+  const getUserProfile = (token) => {
+    // console.log("Inside this function");
+    const data = axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${token?.access_token}`, { headers: { Authorization: `Bearer ${token?.access_token}`, Accept: "application/json" } }).then((res) => {
+      console.log(res);
+      localStorage.setItem("user", JSON.stringify(res.data));
+      setOpenDialog(false);
+      onGenerateTrip();
+    });
+
+    // console.log("Outside this function");
+  };
+
   return (
     <div className="sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10">
       <h2 className="font-bold text-3xl">Tell us your Travel Preference 💸🏖️</h2>
