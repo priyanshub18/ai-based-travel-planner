@@ -9,11 +9,26 @@ import { chatSession } from "../service/AIModel";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { Button } from "../components/ui/button";
 import { useGoogleLogin } from "@react-oauth/google";
+import { setDoc, doc } from "firebase/firestore";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { RotatingLines } from "react-loader-spinner";
+import { db } from "../service/firebaseConfig";
+import { useNavigate } from "react-router-dom";
 
 function CreateTrip() {
   const [place, setPlace] = useState("");
   const [formData, setFormData] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
+  const [loading, setloading] = useState(false);
+  
+  //TODO add a custom waiting time period wherr you can show some videos and some fact
+  // const [fact , setFact] = useState("");
+  // const generateFact= () =>{
+  //   const fact = axios.get("https://api.api-ninjas.com/v1/facts");
+  //   log(fact);
+  // }
+  const navigate = useNavigate();
+
   const handleInputChange = (name, value) => {
     setFormData({
       ...formData,
@@ -29,6 +44,8 @@ function CreateTrip() {
     onError: (error) => console.log(error),
   });
   const onGenerateTrip = async () => {
+    // generateFact();
+    console.log("Clicked on a button");
     const user = localStorage.getItem("user");
     if (!user) {
       setOpenDialog(true);
@@ -42,14 +59,33 @@ function CreateTrip() {
       toast("Please fill all the fields");
       return;
     }
-
+    setloading(true);
     const FINAL_PROMT = AI_PROMPTS.replace("{location}", formData?.place?.label).replace("{totalDays}", formData?.noOfDays).replace("{traveler}", formData?.traveller).replace("{budget}", formData?.budget).replace("{totalDays}", formData?.noOfDays);
-    // console.log("Sending the req");
-    //
-    const result = await chatSession.sendMessage(FINAL_PROMT);
-    // console.log("Reecieved some request");
 
+    const result = await chatSession.sendMessage(FINAL_PROMT);
+    setloading(false);
     console.log(result?.response?.text());
+    SaveAiTrip(result?.response?.text());
+  };
+  const SaveAiTrip = async (result) => {
+    const docId = Date.now().toString();
+    const user = JSON.parse(localStorage.getItem("user"));
+    const to_remove = "````";
+    result = result.slice(to_remove.length, result.length - to_remove.length);
+    let ans = result.slice(7);
+    ans = "{" + ans;
+    console.log(ans);
+    const Json_res = JSON.parse(ans);
+    setloading(true);
+    await setDoc(doc(db, "AITrips", docId), {
+      id: docId,
+      userSelection: formData,
+      tripData: Json_res,
+      userEmail: user?.email,
+    });
+    setloading(false);
+
+    navigate("/view-trip/" + docId);
   };
 
   useEffect(() => {
@@ -138,7 +174,14 @@ function CreateTrip() {
         </div>
         <div className="flex justify-center">
           <button onClick={onGenerateTrip} className="bg-[#130705] text-white py-3 px-5 rounded-lg">
-            Generate Trip
+            {loading ? <AiOutlineLoading3Quarters className="h-7 w-7 animate-spin" /> : "Generate Trip"}
+            {/* <RotatingLines
+      strokeColor="grey"
+      strokeWidth="5"
+      animationDuration="0.75"
+      width="96"
+      visible={true}
+    /> */}
           </button>
         </div>
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -157,6 +200,24 @@ function CreateTrip() {
             </DialogHeader>
           </DialogContent>
         </Dialog>
+       { /* // TODO add a custom waiting time period wherr you can show some videos and some fact */}
+        {/* <Dialog open={loading} onOpenChange={setloading}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogDescription>
+                
+                <div className="flex justify-center flex-col items-center">
+                  <img src="/logo.svg" alt="" />
+                  <h2 className="text-lg font-bold mt-10">Sign in With Google</h2>
+                  <p>Signin in the app with Google Authentication</p>
+                  <Button onClick={login} className="w-full mt-4">
+                    Sign in With Google
+                  </Button>
+                </div>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog> */}
       </div>
     </div>
   );
