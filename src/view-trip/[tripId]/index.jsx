@@ -13,6 +13,7 @@ function ViewTrip() {
   const [trip, setTrip] = useState({});
   useEffect(() => {
     GetTripData();
+    // window.location.reload();
   }, [id]);
 
   const GetTripData = async () => {
