@@ -1,7 +1,22 @@
+import { GetPlaceDetails } from "../../service/GlobalApi";
 import { Button } from "../../components/ui/button";
 import React from "react";
 import { MdOutlineSend } from "react-icons/md";
+import { useEffect } from "react";
 function InfoSection({ trip }) {
+  useEffect(() => {
+    trip && GetPlacePhoto();
+  }, []);
+
+  const GetPlacePhoto = async () => {
+    const data = {
+      textQuery: trip?.userSelection?.place?.label,  
+    };
+    await GetPlaceDetails(data).then((res) => {
+      console.log(res.data);
+    });
+  };
+
   return (
     <div>
       <img src="/placeholder.jpg" alt="placeholder" className="h-[300px] w-full object-cover rounded-xl" />

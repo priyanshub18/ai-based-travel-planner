@@ -7,6 +7,7 @@ import InfoSection from "../components/InfoSection";
 import { useState } from "react";
 import Hotel from "../components/Hotel";
 import PlacesToVisit from "../components/PlacesToVisit";
+import Footer from "../components/Footer";
 function ViewTrip() {
   const { id } = useParams();
   const [trip, setTrip] = useState({});
@@ -40,7 +41,7 @@ function ViewTrip() {
         {/* daily plan */}
         <PlacesToVisit trip={trip} />
         {/* footer */}
-        
+        <Footer/>
       </div>
     </>
   );

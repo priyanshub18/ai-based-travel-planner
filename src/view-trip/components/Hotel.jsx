@@ -8,7 +8,7 @@ function Hotel({ trip }) {
   return (
     <div>
       <h2 className="font-bold text-xl mt-5 ">Hotel Recommendations</h2>
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5 ">
         {trip?.tripData?.hotelOptions.map((item, index) => (
           <Link to={"https://www.google.com/maps/search/?api=1&query=" + item?.hotelAddress + " " + item?.hotelAddress} target="_blank" rel="noreferrer" key={index}>
             <div className="hover:shadow-md hover:scale-105 transition-all  rounded-lg p-5 flex flex-col  cursor-pointer " >
