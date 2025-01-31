@@ -47,12 +47,17 @@ function Header() {
   }, [user]);
   return (
     <div className="p-3 shadow-sm flex justify-between items-center px-5">
-      <img src="/logo.svg" alt="" />
+      <a href="/">
+      <img src="/logo.svg" alt="" className="h-10 cursor-pointer" />
+      </a>
+     
       <div className="flex gap-2 align-middle">
         {user && <h2 className=" hidden lg:block text-black p-[10px] rounded-lg font-medium">Welcome, {user?.name}</h2>}
         {user ? (
           <div className="flex gap-3 align-middle">
-            <Button className="mt-1">My Trips</Button>
+            <a href="/my-trips">
+              <Button className="mt-1">My Trips</Button>
+            </a>
             {/* 
             <img src={user?.picture} className="h-[50px] w-[50px] rounded-3xl"></img> */}
 

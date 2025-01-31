@@ -34,7 +34,7 @@ function PlaceCardItem({ place }) {
   };
   return (
     <div className="rounded-xl p-3 flex gap-5 mt-2 ">
-      <img src={photoUrl ? photoUrl : "/placeholder.jpg"} alt="" className="w-full h-[150px] object-cover rounded-xl" />
+      <img src={photoUrl ? photoUrl : "/placeholder.png"} alt="" className="w-full h-[150px] object-cover rounded-xl" />
       <div className="flex flex-col gap-3">
         <h2 className="font-bold text-xl">{place?.placeName}</h2>
         <p className="text-sm text-gray-600">{place?.placeDetails}</p>
