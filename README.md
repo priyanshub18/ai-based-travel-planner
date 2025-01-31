@@ -1,8 +1,9 @@
-# React + Vite
+#AI-Based Travel Itinerary App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the AI-Based Travel Itinerary App! This project allows users to create personalized travel itineraries based on their preferences like budget, location, and travel days. The app suggests day-wise activities, hotels, and provides comprehensive details using the Gemini API, Photos API, and Places API to gather and display information.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+#Features
+	•	Personalized Itineraries: Customize itineraries based on your budget, location, and days.
+	•	Hotel Recommendations: Get a list of hotels based on your selected preferences.
+	•	Day-Wise Activities: Detailed day-wise plans that suggest places to visit, dine, and explore.
+	•	AI Integration: Uses AI-powered APIs (Gemini, Photos, and Places) to fetch real-time travel information and recommendations.
