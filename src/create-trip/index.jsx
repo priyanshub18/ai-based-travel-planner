@@ -15,7 +15,6 @@ import { RotatingLines } from "react-loader-spinner";
 import { db } from "../service/firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { Progress } from "../components/ui/progress";
-import { set } from "zod";
 function CreateTrip() {
   const [place, setPlace] = useState("");
   const [formData, setFormData] = useState([]);
