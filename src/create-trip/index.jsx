@@ -200,12 +200,12 @@ function CreateTrip() {
           </DialogContent>
         </Dialog>
         {/* // TODO add a custom waiting time period wherr you can show some videos and some fact */}
-        <Dialog open={loading} onOpenChange={setloading}>
+        <Dialog open={loading} onOpenChange={setloading} >
           <DialogContent>
             <DialogHeader>
               <DialogDescription>
-                <div className="flex justify-center flex-col items-center ">
-                  <h2 className="text-xl font-bold mt-10 font-black">Generating Trip</h2>
+                <div className="flex justify-center flex-col items-center">
+                  <h2 className="text-xl  mt-10 font-black">Generating Trip</h2>
                   <p className="text-md text-black mt-2 mb-10">Please wait while we generate your trip</p>
                   <AiOutlineLoading3Quarters className="h-10 w-10 animate-spin mb-10" />
                   {/* <p className="text-md text-black mt-2 text-center">
