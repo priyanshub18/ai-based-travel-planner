@@ -206,12 +206,12 @@ function CreateTrip() {
             <DialogHeader>
               <DialogDescription>
                 <div className="flex justify-center flex-col items-center ">
-                  <h2 className="text-xl font-bold mt-10">Generating Trip</h2>
-                  <p className="text-md text-gray-500 mt-2 mb-10">Please wait while we generate your trip</p>
+                  <h2 className="text-xl font-bold mt-10 font-black">Generating Trip</h2>
+                  <p className="text-md text-black mt-2 mb-10">Please wait while we generate your trip</p>
                   <AiOutlineLoading3Quarters className="h-10 w-10 animate-spin mb-10" />
-                  <p className="text-md text-black mt-2 text-center">
+                  {/* <p className="text-md text-black mt-2 text-center">
                   A person susceptible to <span className="text-red-600">wanderlust</span> is not so much addicted to movement as committed to transformation.
-                  </p>
+                  </p> */}
                 </div>
               </DialogDescription>
             </DialogHeader>

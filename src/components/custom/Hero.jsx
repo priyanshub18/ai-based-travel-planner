@@ -14,6 +14,7 @@ function Hero() {
       <Link to={"/create-trip"}>
         <Button>Get Started</Button>
       </Link>
+      {/* <img src="/starter.png" alt="" className="w-full rounded-lg" /> */}
     </div>
   );
 }

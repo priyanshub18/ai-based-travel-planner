@@ -55,9 +55,13 @@ function Header() {
         {user && <h2 className=" hidden lg:block text-black p-[10px] rounded-lg font-medium">Welcome, {user?.name}</h2>}
         {user ? (
           <div className="flex gap-3 align-middle">
+            <a href="/create-trip">
+              <Button className="mt-1">+ Create Trip</Button>
+            </a>
             <a href="/my-trips">
               <Button className="mt-1">My Trips</Button>
             </a>
+
             {/* 
             <img src={user?.picture} className="h-[50px] w-[50px] rounded-3xl"></img> */}
 
