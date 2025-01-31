@@ -10,6 +10,7 @@ import { Toaster } from "./components/ui/sonner";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import ViewTrip from "./view-trip/[tripId]";
 import MyTrips from "./my-trips";
+import NotFound from "./404";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -26,15 +27,17 @@ const router = createBrowserRouter([
   {
     path: "/my-trips",
     element: <MyTrips />,
-
-  }
+  },
+  {
+    path: "/*",
+    element: <NotFound />,
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <GoogleOAuthProvider clientId="12733916714-234kro0dvnh83snpt1o5n66av2utrle6.apps.googleusercontent.com">
-    
-      <Header />
-      <Toaster />
-      <RouterProvider router={router} />
+    <Header />
+    <Toaster />
+    <RouterProvider router={router} />
   </GoogleOAuthProvider>
 );

@@ -48,9 +48,9 @@ function Header() {
   return (
     <div className="p-3 shadow-sm flex justify-between items-center px-5">
       <a href="/">
-      <img src="/logo.svg" alt="" className="h-10 cursor-pointer" />
+        <img src="/logo1.svg" alt="" className="h-10 w-50 cursor-pointer" />
       </a>
-     
+
       <div className="flex gap-2 align-middle">
         {user && <h2 className=" hidden lg:block text-black p-[10px] rounded-lg font-medium">Welcome, {user?.name}</h2>}
         {user ? (
@@ -92,13 +92,15 @@ function Header() {
         )}
       </div>
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent>
+        <DialogContent className="">
           <DialogHeader>
             <DialogDescription>
-              <div className="flex justify-center flex-col items-center">
-                <img src="/logo.svg" alt="" />
+              <div className="flex justify-center flex-col items-center ">
+                <img src="/logo3.png" alt="" className="rounded-xl" />
+
                 <h2 className="text-lg font-bold mt-10">Sign in With Google</h2>
-                <p>Signin in the app with Google Authentication</p>
+                <p className="">Signin in the app with Google Authentication</p>
+
                 <Button onClick={login} className="w-full mt-4">
                   Sign in With Google
                 </Button>

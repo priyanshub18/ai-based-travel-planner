@@ -32,7 +32,7 @@ function UserTripCard({ trip }) {
   return (
     <Link to={"/view-trip/" + trip?.id} target="_blank" rel="noreferrer">
       <div className="rounded-xl hover:border-1 border-gray-200 border-solid p-5 transition-all hover:shadow-md hover:scale-105 ">
-        <img src={photoUrl ? photoUrl : "/placeholder.png"} alt="" className="object-cover rounded-xl h-[400px] w-full" />
+        <img src={photoUrl ? photoUrl : "/placeholder.png"} alt="" className="object-cover rounded-xl h-[300px] w-full" />
         <div>
           <h2 className="font-bold text-lg">{trip?.userSelection?.place?.label}</h2>
           <h2>

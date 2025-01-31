@@ -14,13 +14,13 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { RotatingLines } from "react-loader-spinner";
 import { db } from "../service/firebaseConfig";
 import { useNavigate } from "react-router-dom";
-
+import { Progress } from "../components/ui/progress";
+import { set } from "zod";
 function CreateTrip() {
   const [place, setPlace] = useState("");
   const [formData, setFormData] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setloading] = useState(false);
-  
   //TODO add a custom waiting time period wherr you can show some videos and some fact
   // const [fact , setFact] = useState("");
   // const generateFact= () =>{
@@ -200,24 +200,23 @@ function CreateTrip() {
             </DialogHeader>
           </DialogContent>
         </Dialog>
-       { /* // TODO add a custom waiting time period wherr you can show some videos and some fact */}
-        {/* <Dialog open={loading} onOpenChange={setloading}>
+        {/* // TODO add a custom waiting time period wherr you can show some videos and some fact */}
+        <Dialog open={loading} onOpenChange={setloading}>
           <DialogContent>
             <DialogHeader>
               <DialogDescription>
-                
-                <div className="flex justify-center flex-col items-center">
-                  <img src="/logo.svg" alt="" />
-                  <h2 className="text-lg font-bold mt-10">Sign in With Google</h2>
-                  <p>Signin in the app with Google Authentication</p>
-                  <Button onClick={login} className="w-full mt-4">
-                    Sign in With Google
-                  </Button>
+                <div className="flex justify-center flex-col items-center ">
+                  <h2 className="text-xl font-bold mt-10">Generating Trip</h2>
+                  <p className="text-md text-gray-500 mt-2 mb-10">Please wait while we generate your trip</p>
+                  <AiOutlineLoading3Quarters className="h-10 w-10 animate-spin mb-10" />
+                  <p className="text-md text-black mt-2 text-center">
+                  A person susceptible to <span className="text-red-600">wanderlust</span> is not so much addicted to movement as committed to transformation.
+                  </p>
                 </div>
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
-        </Dialog> */}
+        </Dialog>
       </div>
     </div>
   );
