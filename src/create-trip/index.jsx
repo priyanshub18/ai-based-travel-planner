@@ -1,6 +1,6 @@
 import { AI_PROMPTS, SelectBudgetOptions, SelectTravelsList } from "../constants/option";
 import { Input } from "../components/ui/input";
-import React, { useDebugValue, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
@@ -11,10 +11,10 @@ import { Button } from "../components/ui/button";
 import { useGoogleLogin } from "@react-oauth/google";
 import { setDoc, doc } from "firebase/firestore";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { RotatingLines } from "react-loader-spinner";
+
 import { db } from "../service/firebaseConfig";
 import { useNavigate } from "react-router-dom";
-import { Progress } from "../components/ui/progress";
+
 function CreateTrip() {
   const [place, setPlace] = useState("");
   const [formData, setFormData] = useState([]);
