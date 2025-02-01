@@ -200,7 +200,7 @@ function CreateTrip() {
           </DialogContent>
         </Dialog>
         {/* // TODO add a custom waiting time period wherr you can show some videos and some fact */}
-        <Dialog open={loading} onOpenChange={setloading} >
+        <Dialog open={loading} onOpenChange={setloading}>
           <DialogContent>
             <DialogHeader>
               <DialogDescription>
