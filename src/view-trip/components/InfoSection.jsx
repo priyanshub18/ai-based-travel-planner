@@ -33,7 +33,7 @@ function InfoSection({ trip }) {
 
   return (
     <div>
-      <img src={photoUrl ? photoUrl : "/placeholder.jpg"} alt="placeholder" className="h-[300px] w-full object-cover rounded-xl" />
+      <img src={photoUrl ? photoUrl : "/placeholder.png"} alt="placeholder" className="h-[300px] w-full object-cover rounded-xl" />
       <div className="my-5 flex flex-col gap-5">
         <h2 className="font-bold text-2xl">{trip?.userSelection?.place?.label}</h2>
         <div className="flex flex-row justify-between items-center ">

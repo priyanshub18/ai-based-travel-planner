@@ -183,10 +183,10 @@ function CreateTrip() {
     /> */}
           </button>
         </div>
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <Dialog open={openDialog} onOpenChange={setOpenDialog} >
           <DialogContent>
             <DialogHeader>
-              <DialogDescription>
+              <DialogDescription  className="max-w-fit">
                 <div className="flex justify-center flex-col items-center">
                   <img src="/logo.svg" alt="" />
                   <h2 className="text-lg font-bold mt-10">Sign in With Google</h2>
