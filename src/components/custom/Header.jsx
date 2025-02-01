@@ -6,6 +6,9 @@ import { googleLogout } from "@react-oauth/google";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { FaHome } from "react-icons/fa";
+import { GiHamburgerMenu } from "react-icons/gi";
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -53,13 +56,33 @@ function Header() {
         {user && <h2 className=" hidden lg:block text-black p-[10px] rounded-lg font-medium">Welcome, {user?.name}</h2>}
         {user ? (
           <div className="flex gap-3 align-middle">
-            <a href="/create-trip">
+            <a href="/create-trip" className="hidden md:block">
               <Button className="mt-1">+ Create Trip</Button>
             </a>
-            <a href="/my-trips">
+            <a href="/my-trips" className="hidden md:block">
               <Button className="mt-1">My Trips</Button>
             </a>
-
+            <div className="block md:hidden mt-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <GiHamburgerMenu className="h-6 w-6 m-3" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {/* <DropdownMenuLabel>Options</DropdownMenuLabel> */}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <a href="/create-trip">
+                      <Button className="max-w-full min-w-[133px]">+ Create Trip</Button>
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <a href="/my-trips">
+                    <Button className="max-w-full min-w-[133px]">My Trips     </Button>
+                    </a>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
             {/* 
             <img src={user?.picture} className="h-[50px] w-[50px] rounded-3xl"></img> */}
 

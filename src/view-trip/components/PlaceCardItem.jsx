@@ -33,7 +33,7 @@ function PlaceCardItem({ place }) {
       });
   };
   return (
-    <div className="rounded-xl p-3 flex gap-5 mt-2 ">
+    <div className="rounded-xl p-3 flex flex-col gap-5 mt-2  md:flex-row  ">
       <img src={photoUrl ? photoUrl : "/placeholder.png"} alt="" className="w-full h-[150px] object-cover rounded-xl" />
       <div className="flex flex-col gap-3">
         <h2 className="font-bold text-xl">{place?.placeName}</h2>
