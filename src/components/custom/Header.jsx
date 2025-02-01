@@ -72,7 +72,7 @@ function Header() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <a href="/create-trip">
-                      <Button className="max-w-full min-w-[133px]">+ Create Trip</Button>
+                      <Button className="max-w-full min-w-[133px]">Create Trip</Button>
                     </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
