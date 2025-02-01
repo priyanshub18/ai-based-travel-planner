@@ -183,14 +183,16 @@ function CreateTrip() {
     /> */}
           </button>
         </div>
-        <Dialog open={openDialog} onOpenChange={setOpenDialog} >
-          <DialogContent>
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+          <DialogContent className="">
             <DialogHeader>
-              <DialogDescription  className="max-w-fit">
-                <div className="flex justify-center flex-col items-center">
-                  <img src="/logo.svg" alt="" />
+              <DialogDescription>
+                <div className="flex justify-center flex-col items-center ">
+                  <img src="/logo3.png" alt="" className="rounded-xl" />
+
                   <h2 className="text-lg font-bold mt-10">Sign in With Google</h2>
-                  <p>Signin in the app with Google Authentication</p>
+                  <p className="">Signin in the app with Google Authentication</p>
+
                   <Button onClick={login} className="w-full mt-4">
                     Sign in With Google
                   </Button>
