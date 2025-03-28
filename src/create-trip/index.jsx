@@ -9,7 +9,7 @@ import { chatSession } from "../service/AIModel";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { Button } from "../components/ui/button";
 import { useGoogleLogin } from "@react-oauth/google";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 import { db } from "../service/firebaseConfig";
@@ -66,21 +66,53 @@ function CreateTrip() {
     console.log(result?.response?.text());
     SaveAiTrip(result?.response?.text());
   };
+
+  function extractJSON(input) {
+    if (typeof input === "object") {
+      return input;
+    }
+
+    if (typeof input === "string") {
+      const backtickMatch = input.match(/```json([\s\S]*?)```/);
+      if (backtickMatch) {
+        try {
+          return JSON.parse(backtickMatch[1].trim());
+        } catch (error) {
+          console.error("Error parsing JSON from backticks:", error);
+          return null;
+        }
+      }
+
+      try {
+        return JSON.parse(input);
+      } catch (error) {
+        console.error("Error parsing direct JSON:", error);
+        return null;
+      }
+    }
+    console.error("No valid JSON could be extracted");
+    return null;
+  }
+
+  // Example usage:
+  // const jsonData = extractJSON(inputString);
+  // console.log(jsonData);
   const SaveAiTrip = async (result) => {
     const docId = Date.now().toString();
     const user = JSON.parse(localStorage.getItem("user"));
-    const to_remove = "````";
-    result = result.slice(to_remove.length, result.length - to_remove.length);
-    let ans = result.slice(7);
-    ans = "{" + ans;
-    console.log(ans);
-    const Json_res = JSON.parse(ans);
+    const Json_res = extractJSON(result);
+    if (!Json_res) {
+      toast("Please try to generate the trip again");
+      return;
+    }
     setloading(true);
+
     await setDoc(doc(db, "AITrips", docId), {
       id: docId,
       userSelection: formData,
       tripData: Json_res,
       userEmail: user?.email,
+      createdAt: serverTimestamp(),
     });
     setloading(false);
 
@@ -104,16 +136,16 @@ function CreateTrip() {
   };
 
   return (
-    <div className="sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10">
-      <h2 className="font-bold text-3xl">Tell us your Travel Preference 💸🏖️</h2>
-      <p className="mt-3 text-gray-500 text-xl">Just provide some basic information , and our trip planner will generate a customized iternary based on your preferences</p>
+    <div className='sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10'>
+      <h2 className='font-bold text-3xl'>Tell us your Travel Preference 💸🏖️</h2>
+      <p className='mt-3 text-gray-500 text-xl'>Just provide some basic information , and our trip planner will generate a customized iternary based on your preferences</p>
 
-      <div className="mt-20 flex flex-col gap-10">
+      <div className='mt-20 flex flex-col gap-10'>
         <div>
-          <h2 className="text-xl my-3 font-medium">What is your destination of choice?</h2>
+          <h2 className='text-xl my-3 font-medium'>What is your destination of choice?</h2>
           <GooglePlacesAutocomplete
             // change the api please
-            apiKey="AIzaSyDMkZJSXUDbwzxjwQqek0S9-cxK_CRAIyg"
+            apiKey='AIzaSyDMkZJSXUDbwzxjwQqek0S9-cxK_CRAIyg'
             selectProps={{
               place,
               onChange: (v) => {
@@ -124,10 +156,10 @@ function CreateTrip() {
           />
         </div>
         <div>
-          <h2 className="text-xl my-3 font-medium">How many days are you planning your trip?</h2>
+          <h2 className='text-xl my-3 font-medium'>How many days are you planning your trip?</h2>
           <Input
             placeholder={"Ex.3"}
-            type="number"
+            type='number'
             onChange={(e) => {
               handleInputChange("noOfDays", e.target.value);
             }}
@@ -135,8 +167,8 @@ function CreateTrip() {
         </div>
 
         <div>
-          <h2 className="text-xl my-3 font-medium">What is your Budget?</h2>
-          <div className="grid grid-cols-3 gap-5 mt-5">
+          <h2 className='text-xl my-3 font-medium'>What is your Budget?</h2>
+          <div className='grid grid-cols-3 gap-5 mt-5'>
             {SelectBudgetOptions.map((item, index) => (
               <div
                 key={index}
@@ -145,17 +177,17 @@ function CreateTrip() {
                 }}
                 className={`p-4 border rounded-lg hover:shadow flex flex-col items-center cursor-pointer ${formData?.budget == item.title && "border-[#130705] border-2"}`}
               >
-                <h2 className="text-4xl">{item.icon}</h2>
-                <h2 className="font-bold">{item.title}</h2>
-                <h2 className="text-sm text-gray-500">{item.desc}</h2>
+                <h2 className='text-4xl'>{item.icon}</h2>
+                <h2 className='font-bold'>{item.title}</h2>
+                <h2 className='text-sm text-gray-500'>{item.desc}</h2>
               </div>
             ))}
           </div>
         </div>
 
         <div>
-          <h2 className="text-xl my-3 font-medium">Select Travel List:</h2>
-          <div className="grid grid-cols-3 gap-5 mt-5">
+          <h2 className='text-xl my-3 font-medium'>Select Travel List:</h2>
+          <div className='grid grid-cols-3 gap-5 mt-5'>
             {SelectTravelsList.map((item, index) => (
               <div
                 key={index}
@@ -164,16 +196,16 @@ function CreateTrip() {
                 }}
                 className={`p-4 border rounded-lg hover:shadow flex flex-col items-center cursor-pointer ${formData?.traveller == item.title && "border-[#130705] border-2 shadow-md"}`}
               >
-                <h2 className="text-4xl">{item.icon}</h2>
-                <h2 className="font-bold">{item.title}</h2>
-                <h2 className="text-sm text-gray-500">{item.desc}</h2>
+                <h2 className='text-4xl'>{item.icon}</h2>
+                <h2 className='font-bold'>{item.title}</h2>
+                <h2 className='text-sm text-gray-500'>{item.desc}</h2>
               </div>
             ))}
           </div>
         </div>
-        <div className="flex justify-center">
-          <button onClick={onGenerateTrip} className="bg-[#130705] text-white py-3 px-5 rounded-lg">
-            {loading ? <AiOutlineLoading3Quarters className="h-7 w-7 animate-spin" /> : "Generate Trip"}
+        <div className='flex justify-center'>
+          <button onClick={onGenerateTrip} className='bg-[#130705] text-white py-3 px-5 rounded-lg'>
+            {loading ? <AiOutlineLoading3Quarters className='h-7 w-7 animate-spin' /> : "Generate Trip"}
             {/* <RotatingLines
       strokeColor="grey"
       strokeWidth="5"
@@ -184,16 +216,16 @@ function CreateTrip() {
           </button>
         </div>
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <DialogContent className="">
+          <DialogContent className=''>
             <DialogHeader>
               <DialogDescription>
-                <div className="flex justify-center flex-col items-center ">
-                  <img src="/logo3.png" alt="" className="rounded-xl" />
+                <div className='flex justify-center flex-col items-center '>
+                  <img src='/logo3.png' alt='' className='rounded-xl' />
 
-                  <h2 className="text-lg font-bold mt-10">Sign in With Google</h2>
-                  <p className="">Signin in the app with Google Authentication</p>
+                  <h2 className='text-lg font-bold mt-10'>Sign in With Google</h2>
+                  <p className=''>Signin in the app with Google Authentication</p>
 
-                  <Button onClick={login} className="w-full mt-4">
+                  <Button onClick={login} className='w-full mt-4'>
                     Sign in With Google
                   </Button>
                 </div>
@@ -206,14 +238,18 @@ function CreateTrip() {
           <DialogContent>
             <DialogHeader>
               <DialogDescription>
-                <div className="flex justify-center flex-col items-center">
-                  <h2 className="text-xl  mt-10 font-black">Generating Trip</h2>
-                  <p className="text-md text-black mt-2 mb-10">Please wait while we generate your trip</p>
-                  <AiOutlineLoading3Quarters className="h-10 w-10 animate-spin mb-10" />
-                  {/* <p className="text-md text-black mt-2 text-center">
+                <div className='flex flex-col items-center justify-center min-h-[500px] p-6 '>
+                  <div className='text-center space-y-6'>
+                    <h2 className='text-3xl font-extrabold text-gray-800 tracking-tight'>Generating Your Trip</h2>
+                    <p className='text-lg text-gray-600 max-w-md mx-auto'>Our AI is crafting a personalized travel experience just for you. This may take a moment...</p>
+                    <div className='flex justify-center'>
+                      <AiOutlineLoading3Quarters className='h-16 w-16 text-blue-600 animate-spin opacity-75 transform' />
+                    </div>
+                  </div>
+                </div>
+                {/* <p className="text-md text-black mt-2 text-center">
                   A person susceptible to <span className="text-red-600">wanderlust</span> is not so much addicted to movement as committed to transformation.
                   </p> */}
-                </div>
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
