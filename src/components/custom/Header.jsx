@@ -1,140 +1,142 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { googleLogout } from "@react-oauth/google";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { useGoogleLogin } from "@react-oauth/google";
+import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { FaHome } from "react-icons/fa";
+import { Dialog, DialogContent, DialogDescription, DialogHeader } from "../ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { GiHamburgerMenu } from "react-icons/gi";
+
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   const login = useGoogleLogin({
-    onSuccess: (response) => {
-      console.log(response);
-      getUserProfile(response);
-      // console.log("hi after some call");
-    },
-    onError: (error) => console.log(error),
+    onSuccess: (tokenResponse) => getUserProfile(tokenResponse),
+    onError: (error) => console.error("Login Failed:", error),
   });
 
-  const getUserProfile = (token) => {
-    // console.log("Inside this function");
-    const data = axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${token?.access_token}`, { headers: { Authorization: `Bearer ${token?.access_token}`, Accept: "application/json" } }).then((res) => {
-      console.log(res);
-      localStorage.setItem("user", JSON.stringify(res.data));
+  const getUserProfile = async (token) => {
+    try {
+      const res = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`,
+          Accept: "application/json",
+        },
+      });
+      const userData = res.data;
+      localStorage.setItem("user", JSON.stringify(userData));
+      setUser(userData);
+      setIsLoggedIn(true);
       setOpenDialog(false);
-      // onGenerateTrip();
-    });
-
-    // console.log("Outside this function");
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
   };
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  // const navigate = useNavigation();
-  useEffect(() => {
-    // console.log("Inside this header thingy");
+  const handleSignOut = () => {
+    googleLogout();
+    localStorage.removeItem("user");
+    setUser(null);
+    setIsLoggedIn(false);
+    window.location.reload();
+  };
 
-    if (user) {
-      setIsLoggedIn(true);
-      console.log(user);
-    } else {
-      setIsLoggedIn(false);
-      // navigate("/create-trip");
-    }
-  }, [user]);
   return (
-    <div className="p-3 shadow-sm flex justify-between items-center px-5">
-      <a href="/">
-        <img src="/logo1.svg" alt="" className="h-10 w-50 cursor-pointer" />
-      </a>
+    <header className='sticky top-0 z-50 bg-white shadow-sm'>
+      <div className='container mx-auto px-4 py-3 flex justify-between items-center'>
+        {/* Logo */}
+        <a href='/' className='flex items-center'>
+          <img src='/logo1.svg' alt='Logo' className='h-10' />
+        </a>
 
-      <div className="flex gap-2 align-middle">
-        {user && <h2 className=" hidden lg:block text-black p-[10px] rounded-lg font-medium">Welcome, {user?.name}</h2>}
-        {user ? (
-          <div className="flex gap-3 align-middle">
-            <a href="/create-trip" className="hidden md:block">
-              <Button className="mt-1">+ Create Trip</Button>
-            </a>
-            <a href="/my-trips" className="hidden md:block">
-              <Button className="mt-1">My Trips</Button>
-            </a>
-            <div className="block md:hidden mt-1">
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <GiHamburgerMenu className="h-6 w-6 m-3" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {/* <DropdownMenuLabel>Options</DropdownMenuLabel> */}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <a href="/create-trip">
-                      <Button className="max-w-full min-w-[133px]">Create Trip</Button>
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <a href="/my-trips">
-                    <Button className="max-w-full min-w-[133px]">My Trips     </Button>
-                    </a>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            {/* 
-            <img src={user?.picture} className="h-[50px] w-[50px] rounded-3xl"></img> */}
+        {/* Right side */}
+        <div className='flex items-center gap-4'>
+          {isLoggedIn ? (
+            <>
+              {/* Welcome (Desktop Only) */}
+              {user && <span className='hidden lg:block text-gray-700 font-medium'>Welcome, {user.name}</span>}
 
-            <Popover>
-              <PopoverTrigger>
-                <img src={user?.picture} className="h-[50px] w-[50px] rounded-3xl"></img>
-              </PopoverTrigger>
-              <PopoverContent>
-                <Button
-                  className="w-full"
-                  onClick={() => {
-                    googleLogout();
-                    localStorage.removeItem("user");
-                    setIsLoggedIn(false);
-                    window.location.reload();
-                    // navigate("/create-trip");
-                  }}
-                >
-                  LogOut
-                </Button>
-              </PopoverContent>
-            </Popover>
-          </div>
-        ) : (
-          <Button
-            onClick={() => {
-              setOpenDialog(true);
-            }}
-          >
-            Sign in
-          </Button>
-        )}
+              {/* Nav Buttons (Desktop Only) */}
+              <div className='hidden md:flex gap-3'>
+                <a href='/create-trip'>
+                  <Button variant='default'>+ Create Trip</Button>
+                </a>
+                <a href='/my-trips'>
+                  <Button variant='outline'>My Trips</Button>
+                </a>
+              </div>
+
+              {/* Mobile Hamburger */}
+              <div className='md:hidden'>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant='ghost' size='icon' className='h-9 w-9'>
+                      <GiHamburgerMenu className='h-5 w-5' />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align='end' className='w-56'>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <a href='/create-trip' className='w-full'>
+                        <Button className='w-full justify-start'>Create Trip</Button>
+                      </a>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <a href='/my-trips' className='w-full'>
+                        <Button variant='outline' className='w-full justify-start'>
+                          My Trips
+                        </Button>
+                      </a>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+              {/* Profile Picture */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className='rounded-full overflow-hidden h-10 w-10 ring-2 ring-gray-200 hover:ring-primary transition-all focus:outline-none focus:ring-primary'>{user?.picture ? <img src={user.picture} alt='Profile' className='h-full w-full object-cover' /> : <div className='h-full w-full bg-gray-300 flex items-center justify-center text-gray-600'>{user?.name?.charAt(0) || "U"}</div>}</button>
+                </PopoverTrigger>
+                <PopoverContent className='w-48 p-2' align='end'>
+                  <div className='flex flex-col gap-2'>
+                    <div className='text-sm text-gray-500 px-2 py-1'>{user?.email}</div>
+                    <Button variant='destructive' className='w-full' onClick={handleSignOut}>
+                      Sign Out
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </>
+          ) : (
+            <Button onClick={() => setOpenDialog(true)}>Sign in</Button>
+          )}
+        </div>
       </div>
+
+      {/* Sign In Dialog */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent className="">
+        <DialogContent className='sm:max-w-md'>
           <DialogHeader>
             <DialogDescription>
-              <div className="flex justify-center flex-col items-center ">
-                <img src="/logo3.png" alt="" className="rounded-xl" />
-
-                <h2 className="text-lg font-bold mt-10">Sign in With Google</h2>
-                <p className="">Signin in the app with Google Authentication</p>
-
-                <Button onClick={login} className="w-full mt-4">
-                  Sign in With Google
-                </Button>
+              <div className='flex flex-col items-center py-4 space-y-4'>
+                <img src='/logo3.png' alt='Logo' className='rounded-xl h-24 w-auto' />
+                <Button onClick={login}>Sign in with Google</Button>
               </div>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
       </Dialog>
-    </div>
+    </header>
   );
 }
 
